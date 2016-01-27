@@ -76,14 +76,14 @@
         "vnetSetupUrl": "[concat(parameters('baseUrl'), '/vnet-new.json')]",
         "publicIpAddress": "[concat(parameters('vmPrefix'), '-pip')]",
         "publicIpAddressType": "Dynamic",
-        "publicIpUrl": "[concat(parameters('baseUrl'), '/publicIps.json')]",
+        "publicIpsUrl": "[concat(parameters('baseUrl'), '/publicIps.json')]",
         "storageAccountSetupUrl": "[concat(parameters('baseUrl'), '/storageAccount.json')]"
     },
     "resources": [
         {
             "name": "SettingUpStorageAccount",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2015-08-01",
+            "apiVersion": "2015-11-01",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -103,7 +103,7 @@
         {
             "name": "SettingUpPublicIps",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2015-08-01",
+            "apiVersion": "2015-11-01",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -126,7 +126,7 @@
         {
             "name": "SettingUpVirtualNetwork",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2015-08-01",
+            "apiVersion": "2015-11-01",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -135,10 +135,10 @@
                 },
                 "parameters": {
                     "virtualNetworkName": {
-                        "value": "[parameters('vnetName')]"
+                        "value": "[variables('vnetName')]"
                     },
                     "virtualNetworkAddressRange": {
-                        "value": "[parameters('vnetAddressRange')]"
+                        "value": "[variables('vnetAddressRange')]"
                     },
                     "subnets": {
                         "value": "[variables('subnets')]"

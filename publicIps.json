@@ -16,7 +16,7 @@
         {
             "name": "[parameters('publicIpAddressName')]",
             "type": "Microsoft.Network/publicIPAddresses",
-            "apiVersion": "2015-08-01",
+            "apiVersion": "2015-11-01",
             "location": "[resourceGroup().location]",
             "properties": {
                 "publicIPAllocationMethod": "[parameters('publicIpAddressType')]",
