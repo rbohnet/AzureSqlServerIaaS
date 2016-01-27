@@ -74,7 +74,7 @@
             }
         ],
         "vnetSetupUrl": "[concat(parameters('baseUrl'), '/vnet-new.json')]",
-        "publicIpAddress": "[concat(variables('vmPrefix'), '-pip')]",
+        "publicIpAddress": "[concat(parameters('vmPrefix'), '-pip')]",
         "publicIpAddressType": "Dynamic",
         "publicIpUrl": "[concat(parameters('baseUrl'), '/publicIps.json')]",
         "storageAccountSetupUrl": "[concat(parameters('baseUrl'), '/storageAccount.json')]"
@@ -118,7 +118,7 @@
                         "value": "[variables('publicIpAddressType')]"
                     },
                     "dnsPrefix": {
-                        "value": "[variables('vmPrefix')]"
+                        "value": "[parameters('vmPrefix')]"
                     }
                 }
             }
