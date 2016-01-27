@@ -28,11 +28,7 @@
     ],
     "outputs": {
         "publicIpId": {
-            "value": "[resourceId(concat('Microsoft.Network','/','publicIPAddresses'),parameters('publicIpAddressName'))]",
-            "type": "string"
-        },
-        "fqdn": {
-            "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIpAddressName')),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[0]).dnsSettings.fqdn]",
+            "value": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIpAddressName'))]",
             "type": "string"
         }
     }
