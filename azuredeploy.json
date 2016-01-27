@@ -1,0 +1,151 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "baseUrl": {
+            "type": "string",
+            "metadata": {
+                "artifactsBaseUrl": "",
+                "description": "URL to acquire other templates"
+            },
+            "defaultValue": "https://raw.githubusercontent.com/rbohnet/AzureSqlServerIaaS/master"
+        },
+        "vmPrefix": {
+            "type": "string"
+        },
+        "adminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Administrator of the new VM"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password for the Administrator account of the new VM"
+            }
+        },
+        "sqlServerServiceAccountUserName": {
+            "type": "string",
+            "metadata": {
+                "description": "The SQL Server Service account name"
+            },
+            "defaultValue": "sqlservice"
+        },
+        "sqlServerServiceAccountPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The SQL Server Service account password"
+            }
+        },
+        "storageAccountNamePrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Name prefix of the new storage account created to store the VMs disks"
+            }
+        },
+        "storageAccountType": {
+            "type": "string",
+            "allowedValues": [
+                "Premium_LRS"
+            ],
+            "metadata": {
+                "description": "The type of the Storage Account created"
+            },
+            "defaultValue": "Premium_LRS"
+        },
+        "vmSize": {
+            "type": "string",
+            "metadata": {
+                "description": "The size of the VM Created"
+            },
+            "defaultValue": "Standard_DS2"
+        }
+    },
+    "variables": {
+        "vnetName": "[concat(parameters('vmPrefix'), '-vnet')]",
+        "vnetAddressRange": "10.0.0.0/16",
+        "subnets": [
+            {
+                "name": "Subnet-1",
+                "properties": {
+                    "addressPrefix": "10.0.0.0/24"
+                }
+            }
+        ],
+        "vnetSetupUrl": "[concat(parameters('baseUrl'), '/vnet-new.json')]",
+        "publicIpAddress": "[concat(variables('vmPrefix'), '-pip')]",
+        "publicIpAddressType": "Dynamic",
+        "publicIpUrl": "[concat(parameters('baseUrl'), '/publicIps.json')]",
+        "storageAccountSetupUrl": "[concat(parameters('baseUrl'), '/storageAccount.json')]"
+    },
+    "resources": [
+        {
+            "name": "SettingUpStorageAccount",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-08-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('storageAccountSetupUrl')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "storageAccountType": {
+                        "value": "[parameters('storageAccountType')]"
+                    },
+                    "storageAccountNamePrefix": {
+                        "value": "[parameters('storageAccountNamePrefix')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "SettingUpPublicIps",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-08-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('publicIpsUrl')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "publicIpAddressName": {
+                        "value": "[variables('publicIpAddress')]"
+                    },
+                    "publicIpAddressType": {
+                        "value": "[variables('publicIpAddressType')]"
+                    },
+                    "dnsPrefix": {
+                        "value": "[variables('vmPrefix')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "SettingUpVirtualNetwork",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-08-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('vnetSetupURL')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualNetworkName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "virtualNetworkAddressRange": {
+                        "value": "[parameters('vnetAddressRange')]"
+                    },
+                    "subnets": {
+                        "value": "[variables('subnets')]"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}

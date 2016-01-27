@@ -1,0 +1,39 @@
+﻿{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "publicIpAddressName": {
+            "type": "string"
+        },
+        "publicIpAddressType": {
+            "type": "string"
+        },
+        "dnsPrefix": {
+            "type": "string"
+        }
+    },
+    "resources": [
+        {
+            "name": "[parameters('publicIpAddressName')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2015-08-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publicIPAllocationMethod": "[parameters('publicIpAddressType')]",
+                "dnsSettings": {
+                    "domainNameLabel": "[parameters('dnsPrefix')]"
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "publicIpId": {
+            "value": "[resourceId(concat('Microsoft.Network','/','publicIPAddresses'),parameters('publicIpAddressName'))]",
+            "type": "string"
+        },
+        "fqdn": {
+            "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIpAddressName')),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[0]).dnsSettings.fqdn]",
+            "type": "string"
+        }
+    }
+}
