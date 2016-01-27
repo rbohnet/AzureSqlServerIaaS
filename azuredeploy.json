@@ -83,7 +83,7 @@
         {
             "name": "SettingUpStorageAccount",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2015-06-15",
+            "apiVersion": "2015-11-01",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -103,7 +103,7 @@
         {
             "name": "SettingUpPublicIps",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2015-06-15",
+            "apiVersion": "2015-11-01",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
