@@ -67,6 +67,7 @@
   "variables": {
     "vnetName": "[concat(parameters('vmPrefix'), '-vnet')]",
     "vnetAddressRange": "10.0.0.0/16",
+    "vnetId": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
     "subnets": [
       {
         "name": "Subnet-1",
@@ -75,10 +76,15 @@
         }
       }
     ],
+    "subnetRef": "[concat(variables('vnetId'), '/subnets/', variables('subnets').name)]",
     "vnetSetupUrl": "[concat(parameters('baseUrl'), '/vnet-new.json')]",
     "publicIpAddress": "[concat(parameters('vmPrefix'), '-pip')]",
     "publicIpAddressType": "Dynamic",
-    "publicIpsUrl": "[concat(parameters('baseUrl'), '/publicIPs.json')]",
+    "publicIpsUrl": "[concat(parameters('baseUrl'), '/publicIps.json')]",
+
+    "nicName": "[concat(parameters('vmPrefix'), '-nic')]",
+    "nicsNewUrl": "[concat(parameters('baseUrl'), '/nics-new.json')]",
+
     "storageAccountSetupUrl": "[concat(parameters('baseUrl'), '/storageAccount.json')]"
   },
   "resources": [
@@ -144,6 +150,33 @@
           },
           "dnsPrefix": {
             "value": "[parameters('vmPrefix')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "CreatingNetworkInterfaces",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/SettingUpVirtualNetwork",
+        "Microsoft.Resources/deployments/SettingUpPublicIps"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('nicsNewUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "nicName": {
+            "value": "[variables('nicName')]"
+          },
+          "subnetRef": {
+            "value": "[variables('subnetRef')]"
+          },
+          "publicIpAddressid": {
+            "value": "[reference('SettingUpPublicIps').outputs.publicIpResourceId.value]"
           }
         }
       }
