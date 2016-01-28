@@ -47,12 +47,13 @@
     "storageAccountType": {
       "type": "string",
       "allowedValues": [
+        "Standard_LRS",
         "Premium_LRS"
       ],
       "metadata": {
         "description": "The type of the Storage Account created"
       },
-      "defaultValue": "Premium_LRS"
+      "defaultValue": "Standard_LRS"
     },
     "vmSize": {
       "type": "string",
