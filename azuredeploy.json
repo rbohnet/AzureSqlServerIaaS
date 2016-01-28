@@ -5,7 +5,6 @@
     "baseUrl": {
       "type": "string",
       "metadata": {
-        "artifactsBaseUrl": "",
         "description": "URL to acquire other templates"
       },
       "defaultValue": "https://raw.githubusercontent.com/rbohnet/AzureSqlServerIaaS/master"
@@ -13,10 +12,9 @@
     "vmPrefix": {
       "type": "string"
     },
-    "assetLocation": {
+    "assetLocationUrl": {
       "type": "string",
       "metadata": {
-        "artifactsBaseUrl": "",
         "description": "URL for DSC assets"
       },
       "defaultValue": "https://raw.githubusercontent.com/rbohnet/AzureSqlServerIaaS/master/dsc"
@@ -101,7 +99,7 @@
     "vmName": "[concat(parameters('vmPrefix'), '-vm')]",
     "vmNewUrl": "[concat(parameters('baseUrl'), '/vmSql-new.json')]",
 
-    "dscModulesUrl": "[concat(parameters('baseUrl'), '/ConfigureSqlServer.ps1.zip'",
+    "dscModulesUrl": "[concat(parameters('assetLocationUrl'), '/ConfigureSqlServer.ps1.zip'",
     "dscConfigurationFunction": "ConfigureSqlServer.ps1\\ConfigureSqlServer"
   },
   "resources": [
