@@ -14,6 +14,12 @@
     "adminPassword": {
       "type": "securestring"
     },
+    "sqlServerServiceAccountUsername": {
+      "type": "string"
+    },
+    "sqlServerServiceAccountPassword": {
+      "type": "securestring"
+    },
     "imageSku": {
       "type": "string",
       "defaultValue": "Standard"
@@ -32,6 +38,12 @@
       "type": "string",
       "defaultValue": "100"
     },
+    "sqlModulesUrl": {
+      "type": "string"
+    },
+    "sqlConfigurationFunction": {
+      "type": "string"
+    }
     /*
     "sqlLogDisk": {
       "type": "string",
@@ -104,8 +116,44 @@
           ]
         }
       }
-    }
-  ],
-  "outputs": {
-  }
+    },
+    /*
+    {
+      "name": "[concat(parameters('vmName'),'/CreateSQLServer')]",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2015-06-15",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Powershell",
+        "type": "DSC",
+        "typeHandlerVersion": "2.13",
+        "autoUpgradeMinorVersion": false,
+        "settings": {
+          "ModulesUrl": "[parameters('sqlModulesUrl')]",
+          "wmfVersion": "4.0",
+          "ConfigurationFunction": "[parameters('sqlConfigurationFunction')]",
+          "Properties": {
+            "AdminCreds": {
+              "UserName": "[parameters('adminUsername')]",
+              "Password": "PrivateSettingsRef:AdminPassword"
+            },
+            "SqlCreds": {
+              "UserName": "[parameters('sqlServerServiceAccountUsername')]",
+              "Password": "PrivateSettingsRef:SqlServerServiceAccountPassword"
+            }
+          }
+        },
+        "protectedSettings": {
+          "Items": {
+            "AdminPassword": "[parameters('adminPassword')]",
+            "SqlServerServiceAccountPassword": "[parameters('sqlServerServiceAccountPassword')]"
+          }
+        }
+      }
+    },
+    */
+    "outputs":{}
 }
