@@ -44,12 +44,6 @@
     "sqlConfigurationFunction": {
       "type": "string"
     }
-    /*
-    "sqlLogDisk": {
-      "type": "string",
-      "defaultValue": "sqllog-disk"
-    },
-    */
   },
   "variables": {
   },
@@ -94,18 +88,6 @@
               "diskSizeGB": "[parameters('diskSizeInGb')]",
               "lun": 0
             }
-            /*
-              {
-                "vhd": {
-                  "uri": "[concat('http://',parameters('storageAccountNamePrefix'),'1.blob.core.windows.net/vhds/', parameters('sqlLogDisk'), '-1.vhd')]"
-                },
-                "name": "[concat(parameters('vmName'),'-log-disk1')]",
-                "createOption": "empty",
-                "caching": "None",
-                "diskSizeGB": 100,
-                "lun": 1
-              }
-              */
           ]
         },
         "networkProfile": {
@@ -116,44 +98,7 @@
           ]
         }
       }
-    },
-    /*
-    {
-      "name": "[concat(parameters('vmName'),'/CreateSQLServer')]",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "apiVersion": "2015-06-15",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Powershell",
-        "type": "DSC",
-        "typeHandlerVersion": "2.13",
-        "autoUpgradeMinorVersion": false,
-        "settings": {
-          "ModulesUrl": "[parameters('sqlModulesUrl')]",
-          "wmfVersion": "4.0",
-          "ConfigurationFunction": "[parameters('sqlConfigurationFunction')]",
-          "Properties": {
-            "AdminCreds": {
-              "UserName": "[parameters('adminUsername')]",
-              "Password": "PrivateSettingsRef:AdminPassword"
-            },
-            "SqlCreds": {
-              "UserName": "[parameters('sqlServerServiceAccountUsername')]",
-              "Password": "PrivateSettingsRef:SqlServerServiceAccountPassword"
-            }
-          }
-        },
-        "protectedSettings": {
-          "Items": {
-            "AdminPassword": "[parameters('adminPassword')]",
-            "SqlServerServiceAccountPassword": "[parameters('sqlServerServiceAccountPassword')]"
-          }
-        }
-      }
-    },
-    */
-    "outputs":{}
+    }
+  ],
+  "outputs": { }
 }
