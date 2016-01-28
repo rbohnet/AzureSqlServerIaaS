@@ -53,16 +53,14 @@
         "description": "The type of the Storage Account created"
       },
       "defaultValue": "Premium_LRS"
+    },
+    "vmSize": {
+      "type": "string",
+      "metadata": {
+        "description": "The size of the VM Created"
+      },
+      "defaultValue": "Standard_DS2"
     }
-    /*,
-        "vmSize": {
-            "type": "string",
-            "metadata": {
-                "description": "The size of the VM Created"
-            },
-            "defaultValue": "Standard_DS2"
-        }
-        */
   },
   "variables": {
     "vnetName": "[concat(parameters('vmPrefix'), '-vnet')]",
@@ -76,8 +74,9 @@
         }
       }
     ],
-    "subnetRef": "[concat(variables('vnetId'), '/subnets/', variables('subnets').name)]",
-    "vnetSetupUrl": "[concat(parameters('baseUrl'), '/vnet-new.json')]",
+    "subnetRef": "[concat(variables('vnetId'), '/subnets/', variables('subnets')[0].name)]",
+    "vnetNewUrl": "[concat(parameters('baseUrl'), '/vnet-new.json')]",
+
     "publicIpAddress": "[concat(parameters('vmPrefix'), '-pip')]",
     "publicIpAddressType": "Dynamic",
     "publicIpsUrl": "[concat(parameters('baseUrl'), '/publicIps.json')]",
@@ -85,7 +84,10 @@
     "nicName": "[concat(parameters('vmPrefix'), '-nic')]",
     "nicsNewUrl": "[concat(parameters('baseUrl'), '/nics-new.json')]",
 
-    "storageAccountSetupUrl": "[concat(parameters('baseUrl'), '/storageAccount.json')]"
+    "storageAccountSetupUrl": "[concat(parameters('baseUrl'), '/storageAccount.json')]",
+
+    "vmName": "[concat(parameters('vmPrefix'), '-vm')]",
+    "vmNewUrl": "[concat(parameters('baseUrl'), '/vmSql-new.json')]",
   },
   "resources": [
     {
@@ -115,7 +117,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('vnetSetupURL')]",
+          "uri": "[variables('vnetNewUrl')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -177,6 +179,41 @@
           },
           "publicIpAddressid": {
             "value": "[reference('SettingUpPublicIps').outputs.publicIpResourceId.value]"
+          }
+        }
+      }
+    },
+    {
+      "name": "ProvisioningVirtualMachine",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/CreatingNetworkInterfaces"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('vmNewUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "vmName": {
+            "value": "[variables('vmName')]"
+          },
+          "vmSize": {
+            "value": "[parameters('vmSize')]"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "storageAccountNamePrefix": {
+            "value": "[parameters('storageAccountNamePrefix')]"
+          },
+          "nicName": {
+            "value": "[variables('nicName')]"
           }
         }
       }

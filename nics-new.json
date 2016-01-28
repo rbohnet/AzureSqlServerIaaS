@@ -19,21 +19,29 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "properties": {
-          "ipConfigurations": [
-              {
-                  "name": "ipconfig1",
-                  "properties": {
-                      "privateIPAllocationMethod": "Dynamic",
-                      "subnet": {
-                          "id": "[parameters('subnetRef')]"
-                      },
-                      "publicIPAddress": {
-                          "id": "[parameters('publicIpAddressId')]"
-                      }
-                  }
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[parameters('subnetRef')]"
+              },
+              "publicIPAddress": {
+                "id": "[parameters('publicIpAddressId')]"
               }
-          ]
+            }
+          }
+        ]
       }
     }
-  ]
+  ],
+  "outputs": {
+    /*
+    "nicResourceId": {
+      "value": "[resourceId('Microsoft.Network/networkInterfaces',parameters('nicName'))]",
+      "type": "string"
+     }
+    */
+  }
 }
